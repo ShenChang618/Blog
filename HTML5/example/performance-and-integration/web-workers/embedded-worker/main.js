@@ -19,11 +19,11 @@ console.log(url);
 const worker = new Worker(url);
 
 button.addEventListener('click', () => {
-  console.log('发送消息给嵌入式 Web Worker');
+  console.log('发送消息给嵌入式 Web Workers');
   worker.postMessage('send');
 });
 
 worker.addEventListener('message', e => {
-  console.log('接收嵌入式 Web Worker 发送的消息：');
+  console.log('接收嵌入式 Web Workers 发送的消息：');
   console.log(e.data);
 });

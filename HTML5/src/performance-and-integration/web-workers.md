@@ -1,14 +1,14 @@
-# 【深入吧，HTML 5】 性能 & 集成 —— Web Worker
+# 【深入吧，HTML 5】 性能 & 集成 —— Web Workers
 
-JavaScript 采用的是单线程模型，也就是说，所有任务都要在一个线程上完成，一次只能执行一个任务。有时，我们需要处理大量的计算逻辑，这是比较耗费时间的，用户界面很有可能会出现假死状态，非常影响用户体验。这时，我们就可以使用 Web Worker 来处理这些计算。
+JavaScript 采用的是单线程模型，也就是说，所有任务都要在一个线程上完成，一次只能执行一个任务。有时，我们需要处理大量的计算逻辑，这是比较耗费时间的，用户界面很有可能会出现假死状态，非常影响用户体验。这时，我们就可以使用 Web Workers 来处理这些计算。
 
-Web Worker 是 HTML5 中定义的规范，它允许 JavaScript 脚本运行在主线程之外的后台线程中。这就为 JavaScript 创造了 [多线程](https://zh.wikipedia.org/wiki/%E5%A4%9A%E7%BA%BF%E7%A8%8B) 的环境，在主线程，我们可以创建 Worker 线程，并将一些任务分配给它。Worker 线程与主线程同时运行，两者互不干扰。等到 Worker 线程完成任务，就把结果发送给主线程。
+Web Workers 是 HTML5 中定义的规范，它允许 JavaScript 脚本运行在主线程之外的后台线程中。这就为 JavaScript 创造了 [多线程](https://zh.wikipedia.org/wiki/%E5%A4%9A%E7%BA%BF%E7%A8%8B) 的环境，在主线程，我们可以创建 Worker 线程，并将一些任务分配给它。Worker 线程与主线程同时运行，两者互不干扰。等到 Worker 线程完成任务，就把结果发送给主线程。
 
-> Web Worker 与其说创造了多线程环境，不如说是一种回调机制。毕竟 Worker 线程只能用于计算，不能执行更改 DOM 这些操作；它也不能共享内存，没有 [线程同步](https://baike.baidu.com/item/%E7%BA%BF%E7%A8%8B%E5%90%8C%E6%AD%A5) 的概念。
+> Web Workers 与其说创造了多线程环境，不如说是一种回调机制。毕竟 Worker 线程只能用于计算，不能执行更改 DOM 这些操作；它也不能共享内存，没有 [线程同步](https://baike.baidu.com/item/%E7%BA%BF%E7%A8%8B%E5%90%8C%E6%AD%A5) 的概念。
 
-Web Worker 的优点是显而易见的，它可以使主线程能够腾出手来，更好的响应用户的交互操作，而不必被一些计算密集或者高延迟的任务所阻塞。但是，Worker 线程也是比较耗费资源的，因为它一旦创建，就一直运行，不会被用户的操作所中断；所以当任务执行完毕，Worker 线程就应该关闭。
+Web Workers 的优点是显而易见的，它可以使主线程能够腾出手来，更好的响应用户的交互操作，而不必被一些计算密集或者高延迟的任务所阻塞。但是，Worker 线程也是比较耗费资源的，因为它一旦创建，就一直运行，不会被用户的操作所中断；所以当任务执行完毕，Worker 线程就应该关闭。
 
-## Web Worker API
+## Web Workers API
 一个 Worker 线程是由 `new` 命令调用 `Worker()` 构造函数创建的；构造函数的参数是：包含执行任务代码的脚本文件，引入脚本文件的 [URI](https://zh.wikipedia.org/wiki/%E7%BB%9F%E4%B8%80%E8%B5%84%E6%BA%90%E6%A0%87%E5%BF%97%E7%AC%A6) 必须遵守 **同源策略**。
 
 Worker 线程与主线程不在同一个全局上下文中，因此会有一些需要注意的地方：
@@ -22,7 +22,7 @@ Worker 线程与主线程不在同一个全局上下文中，因此会有一些�
 Worker 线程向主线程发送的消息也会通过 **中转对象** 进行传递；因此，总得来讲 Worker 的工作机制就是通过 **中转对象** 来实现消息的传递，再通过 `message` 事件来完成消息的处理。
 
 ## 使用方式
-Web Worker 规范中定义了两种不同类型的线程：
+Web Workers 规范中定义了两种不同类型的线程：
 - Dedicated Worker（专用线程），它的全局上下文是 [DedicatedWorkerGlobalScope](https://developer.mozilla.org/zh-CN/docs/Web/API/DedicatedWorkerGlobalScope) 对象，只能在一个页面使用。
 - Shared Worker（共享线程），它的全局上下文是 [SharedWorkerGlobalScope](https://developer.mozilla.org/zh-CN/docs/Web/API/SharedWorkerGlobalScope) 对象，可以被多个页面共享。
 
@@ -40,7 +40,7 @@ Web Worker 规范中定义了两种不同类型的线程：
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <title>Web Worker 专用线程</title>
+  <title>Web Workers 专用线程</title>
 </head>
 <body>
   <input type="text" name="" id="number1">
@@ -351,10 +351,10 @@ postMessage('我在 importScripts 引入的脚本中');
 self.addProp = '在全局上下文中增加 addProp 属性';
 ```
 
-## 嵌入式 Web Worker
-嵌入式 Web Worker 本质上就是把代码当作字符串处理；如果是字符串我们可存放的地方就太多了，可以放在 `JavaScript` 的变量中、利用函数的 `toString` 方法能够输出本函数所有代码的字符串的特性、放在 `type` 没有被指定可运行的 `mime-type` 的 `<script>` 标签中等等。
+## 嵌入式 Web Workers
+嵌入式 Web Workers 本质上就是把代码当作字符串处理；如果是字符串我们可存放的地方就太多了，可以放在 `JavaScript` 的变量中、利用函数的 `toString` 方法能够输出本函数所有代码的字符串的特性、放在 `type` 没有被指定可运行的 `mime-type` 的 `<script>` 标签中等等。
 
-但是，我们会发现一个问题，字符串怎么当作一个地址传入 Worker 的构造器呢？有什么 API 能够生成 URL 呢？`URL.createObjectURL` 方法可以，可是这个 API 能够接收字符串吗？[查阅文档](https://developer.mozilla.org/zh-CN/docs/Web/API/URL/createObjectURL)，我们知道这个方法接收一个 [`Blob` 对象](https://developer.mozilla.org/zh-CN/docs/Web/API/Blob)，这个对象实例在创建时，第一个参数允许接收字符串，第二个参数接收一个配置对象，其中的 `type` 属性能够指定生成的对象实例的类型。现在，我们已经知道了嵌入式 Web Worker 的工作原理，接下来，我们通过 [Demo](https://github.com/Sam618/Blog/raw/master/HTML5/example/performance-and-integration/web-workers/import-scripts) 来看下代码：
+但是，我们会发现一个问题，字符串怎么当作一个地址传入 Worker 的构造器呢？有什么 API 能够生成 URL 呢？`URL.createObjectURL` 方法可以，可是这个 API 能够接收字符串吗？[查阅文档](https://developer.mozilla.org/zh-CN/docs/Web/API/URL/createObjectURL)，我们知道这个方法接收一个 [`Blob` 对象](https://developer.mozilla.org/zh-CN/docs/Web/API/Blob)，这个对象实例在创建时，第一个参数允许接收字符串，第二个参数接收一个配置对象，其中的 `type` 属性能够指定生成的对象实例的类型。现在，我们已经知道了嵌入式 Web Workers 的工作原理，接下来，我们通过 [Demo](https://github.com/Sam618/Blog/raw/master/HTML5/example/performance-and-integration/web-workers/import-scripts) 来看下代码：
 
 ```HTML
 <!-- index.html -->
@@ -365,14 +365,14 @@ self.addProp = '在全局上下文中增加 addProp 属性';
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <title>嵌入式 Web Worker</title>
+  <title>嵌入式 Web Workers</title>
 </head>
 <body>
   <button id="button">发送消息</button>
 
   <script type="text/javascript-worker">
     self.addEventListener('message', e => {
-      postMessage('我在嵌入式的 Web Worker 中');
+      postMessage('我在嵌入式的 Web Workers 中');
     });
   </script>
   <script src="./main.js"></script>
@@ -404,12 +404,12 @@ console.log(url);
 const worker = new Worker(url);
 
 button.addEventListener('click', () => {
-  console.log('发送消息给嵌入式 Web Worker');
+  console.log('发送消息给嵌入式 Web Workers');
   worker.postMessage('send');
 });
 
 worker.addEventListener('message', e => {
-  console.log('接收嵌入式 Web Worker 发送的消息：');
+  console.log('接收嵌入式 Web Workers 发送的消息：');
   console.log(e.data);
 });
 ```
@@ -418,11 +418,11 @@ worker.addEventListener('message', e => {
 Worker 线程和主线程进行通信，除了使用上面例子中 Worker 实例的 `postMessage` 方法之外，还可以使用 [Broadcast Channel（广播通道）](https://developer.mozilla.org/en-US/docs/Web/API/BroadcastChannel)。
 
 ### Broadcast Channel（广播通道）
-Broadcast Channel 允许我们在同源的所有上下文中发送和接收消息，包括浏览器标签页、iframe 和 Web Worker。需要注意的是这个 API 的兼容性并不好，在 [caniuse](https://caniuse.com/#feat=broadcastchannel) 中我们可以查看浏览器的支持情况。另外，下图能帮助我们更好的理解 Broadcast Channel 的通信过程：
+Broadcast Channel 允许我们在同源的所有上下文中发送和接收消息，包括浏览器标签页、iframe 和 Web Workers。需要注意的是这个 API 的兼容性并不好，在 [caniuse](https://caniuse.com/#feat=broadcastchannel) 中我们可以查看浏览器的支持情况。另外，下图能帮助我们更好的理解 Broadcast Channel 的通信过程：
 
 ![Broadcast Channel Communication process](https://github.com/Sam618/Blog/raw/master/HTML5/assets/broadcast-channel.png)
 
-这个 API 的使用方法与 Web Worker 类似，发送和接收也是通过实例的 `postMessage` 方法和 `message` 事件；不同在于构造器是 `BroadcastChannel`，并且它会接收一个频道名称字符串；有着相同频道名称的 `Broadcast Channel` 实例在同一个广播通道中，因此，它们可以相互通信。
+这个 API 的使用方法与 Web Workers 类似，发送和接收也是通过实例的 `postMessage` 方法和 `message` 事件；不同在于构造器是 `BroadcastChannel`，并且它会接收一个频道名称字符串；有着相同频道名称的 `Broadcast Channel` 实例在同一个广播通道中，因此，它们可以相互通信。
 
 [Demo](https://github.com/Sam618/Blog/raw/master/HTML5/example/performance-and-integration/web-workers/broadcast-channel)
 
@@ -469,7 +469,7 @@ channel.onmessage = e => {
 ```
 
 ### 消息机制
-在 Web Worker 中根据不同的消息格式，有两种发送消息的方式：
+在 Web Workers 中根据不同的消息格式，有两种发送消息的方式：
 
 - 拷贝消息（Copying the message）：这种方式下消息会被序列化、拷贝然后再发送出去，接收方接收后则进行反序列化取得消息；这与我们使用 `JSON.stringify` 方法把 `JSON` 数据转换成字符串，再通过 `JSON.parse` 方法进行解析是一样的过程，只不过浏览器自动帮我们做了这些工作。经过编码/解码的过程后，我们知道主线程和 Worker 线程并不会共用一个消息实例，它们每次通信都会创建消息副本；这样一来，传递的 **消息越大**，**时间开销就越多**。另外，不同的浏览器实现会有所差别，并且旧版本还有兼容问题，因此比较推荐 **手动** 编码成 **字符串** /解码成序列化数据来传递复杂格式的消息。
 - 转移消息（Transferring the message）：这种方式传递的是 [可转让对象](https://html.spec.whatwg.org/multipage/structured-data.html#transferable-objects)，可转让对象从一个上下文转移到另一个上下文并不会经过任何拷贝操作；因此，一旦对象转让，那么它在原来上下文的那个版本将不复存在，该对象的所有权被转让到新的上下文内；这意味着消息发送者一旦发送消息，就再也无法使用发出的消息数据了。这样的消息传递几乎是瞬时的，在传递大数据时会获得极大的性能提升。
@@ -488,7 +488,7 @@ Worker 在实例化时必须传入同源脚本的地址，否则就会报跨域�
 很多时候，我们都需要把脚本放在 CDN 上面，很容易出现跨域问题，有什么办法能避免跨域呢？
 
 ### 异步
-我们看完上文后知道 **嵌入式 Web Worker** 的本质就是利用了字符串，那我们通过异步的方式先获取到 `JavaScript` 文件的内容，然后再生成同源的 URL，这样 Worker 的构造器自然就能顺利运行了；因此，这种方案主要需要解决的问题是异步跨域；异步跨域最简单的方式莫过于使用 [CORS](https://developer.mozilla.org/zh-CN/docs/Web/HTTP/Access_control_CORS) 了，我们来看下 [Demo](https://github.com/Sam618/Blog/raw/master/HTML5/example/performance-and-integration/web-workers/cross-domain-cors)（本地的两个 `server*.js` 都要通过 `node` 运行）。
+我们看完上文后知道 **嵌入式 Web Workers** 的本质就是利用了字符串，那我们通过异步的方式先获取到 `JavaScript` 文件的内容，然后再生成同源的 URL，这样 Worker 的构造器自然就能顺利运行了；因此，这种方案主要需要解决的问题是异步跨域；异步跨域最简单的方式莫过于使用 [CORS](https://developer.mozilla.org/zh-CN/docs/Web/HTTP/Access_control_CORS) 了，我们来看下 [Demo](https://github.com/Sam618/Blog/raw/master/HTML5/example/performance-and-integration/web-workers/cross-domain-cors)（本地的两个 `server*.js` 都要通过 `node` 运行）。
 
 ```JavaScript
 // main.js
@@ -530,7 +530,7 @@ onmessage = e => {
 ```
 
 ### `importScripts`
-这种方式实际上也是 **嵌入式 Web Worker**，不过利用了 `importScripts` 引入脚本没有跨域问题这一特性；首先我们生成引入脚本的代码字符串，然后创建同源的 URL，最后运行 Worker 线程；此时，**嵌入式 Web Worker** 执行 `importScripts` 引入了跨域的脚本，最终的执行效果就跟放在同源一样了。
+这种方式实际上也是 **嵌入式 Web Workers**，不过利用了 `importScripts` 引入脚本没有跨域问题这一特性；首先我们生成引入脚本的代码字符串，然后创建同源的 URL，最后运行 Worker 线程；此时，**嵌入式 Web Workers** 执行 `importScripts` 引入了跨域的脚本，最终的执行效果就跟放在同源一样了。
 
 [Demo](https://github.com/Sam618/Blog/raw/master/HTML5/example/performance-and-integration/web-workers/cross-domain-import-scripts)
 
@@ -570,9 +570,9 @@ onmessage = e => {
 ### 总结
 到此为止，我们已经对 Worker 有了深入的了解，知道了它的作用、使用方式和限制；在真实的场景中，我们也就能够针对最适合的业务使用正确的方式进行使用和规避限制了。
 
-最后，我们可以畅想一下 Web Worker 的使用场景：
-- 在 React 中使用 Web Worker，可以通过这篇 [文章](https://www.zcfy.cc/article/using-webworkers-to-make-react-faster) 了解。
-- [redux-worker](https://github.com/chikeichan/redux-worker)，使用 Web Worker 把计算函数放到后台线程运行，具体介绍可以看 [这里](https://zhuanlan.zhihu.com/p/28525821)。
+最后，我们可以畅想一下 Web Workers 的使用场景：
+- 在 React 中使用 Web Workers，可以通过这篇 [文章](https://www.zcfy.cc/article/using-webworkers-to-make-react-faster) 了解。
+- [redux-worker](https://github.com/chikeichan/redux-worker)，使用 Web Workers 把计算函数放到后台线程运行，具体介绍可以看 [这里](https://zhuanlan.zhihu.com/p/28525821)。
 - [Angular WebWorker Renderer](https://github.com/angular/angular/tree/master/packages/platform-webworker)，解密文章 [一](https://zhuanlan.zhihu.com/p/28365967)、[二](https://zhuanlan.zhihu.com/p/28366193)。
 - 代码编辑器，例如 [Monaco Editor](https://microsoft.github.io/monaco-editor/)。
 
