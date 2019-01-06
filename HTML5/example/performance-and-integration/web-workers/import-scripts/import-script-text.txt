@@ -1,0 +1,1 @@
+console.log('在 import-script-text 中');
