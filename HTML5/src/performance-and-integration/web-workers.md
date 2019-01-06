@@ -31,7 +31,7 @@ Web Worker 规范中定义了两种不同类型的线程：
 ### 专用线程
 下面代码最重要的部分在于两个线程之间怎么发送和接收消息，它们都是使用 `postMessage` 方法发送消息，使用 `onmessage` 事件进行监听。区别是：在主线程中，`onmessage` 事件和 `postMessage` 方法必须挂载在 Worker 的实例上；而在 Worker 线程，Worker 的实例方法本身就是挂载在全局上下文上的。
 
-[Demo](https://github.com/Sam618/Blog/HTML5/example/performance-and-integration/web-workers/dedicated-worker)
+[Demo](https://github.com/Sam618/Blog/raw/master/HTML5/example/performance-and-integration/web-workers/dedicated-worker)
 
 ```HTML
 <!DOCTYPE html>
@@ -101,7 +101,7 @@ onmessage = e => {
 
 > 端口对象会被上文所讲的 **中转对象（WorkerMessagingProxy）** 调用，由 **中转对象** 来决定哪个发送者对应哪个接收者，具体的流程可以看 [Web Worker在WebKit中的实现机制](https://blog.csdn.net/codigger/article/details/40581343)。
 
-[Demo](https://github.com/Sam618/Blog/HTML5/example/performance-and-integration/web-workers/shared-worker)
+[Demo](https://github.com/Sam618/Blog/raw/master/HTML5/example/performance-and-integration/web-workers/shared-worker)
 
 ```JavaScript
 // main.js
@@ -153,7 +153,7 @@ onconnect = function (e) {
 ### 终止 Worker
 如果不需要 Worker 继续运行，我们可以在主线程中调用 Worker 实例的 `terminate` 方法或者使用 Worker 线程的 `close` 方法来终止 Worker 线程。
 
-[Demo](https://github.com/Sam618/Blog/HTML5/example/performance-and-integration/web-workers/close-worker)
+[Demo](https://github.com/Sam618/Blog/raw/master/HTML5/example/performance-and-integration/web-workers/close-worker)
 
 ```JavaScript
 // main.js
@@ -213,7 +213,7 @@ onmessage = e => {
 - `lineno`，发生错误时所在脚本文件的行号。
 - `message`，可读性良好的错误消息。
 
-[Demo](https://github.com/Sam618/Blog/HTML5/example/performance-and-integration/web-workers/handling-errors)
+[Demo](https://github.com/Sam618/Blog/raw/master/HTML5/example/performance-and-integration/web-workers/handling-errors)
 
 ```JavaScript
 // main.js
@@ -248,7 +248,7 @@ onmessage = e => {
 ### 生成 Sub Worker
 Worker 线程本身也能创建 Worker，这样的 Worker 线程被称为 Sub Worker，它们必须与当前页面同源。另外，在创建 Sub Worker 时传入的地址是相对与当前 Worker 线程而不是页面地址，因为这样有助于记录依赖关系。
 
-[Demo](https://github.com/Sam618/Blog/HTML5/example/performance-and-integration/web-workers/sub-worker)
+[Demo](https://github.com/Sam618/Blog/raw/master/HTML5/example/performance-and-integration/web-workers/sub-worker)
 
 ```JavaScript
 // main.js
@@ -300,7 +300,7 @@ Worker 线程中提供了 `importScripts` 函数来引入脚本，该函数接�
 
 `importScripts` 的加载过程和 `<script>` 标签类似，因此使用这个函数引入脚本并 **不存在跨域问题**。在脚本下载时，它们的下载顺序并不固定；但是，在执行时，脚本还是会按照书写的顺序执行；并且，这一系列过程都是 **同步** 进行的。加载成功后，每个脚本中的全局上下文都能够在 Worker 线程中使用；另外，如果脚本无法加载，将会抛出错误，并且之后的代码也无法执行了。
 
-[Demo](https://github.com/Sam618/Blog/HTML5/example/performance-and-integration/web-workers/import-scripts)
+[Demo](https://github.com/Sam618/Blog/raw/master/HTML5/example/performance-and-integration/web-workers/import-scripts)
 
 ```JavaScript
 // main.js
@@ -354,7 +354,7 @@ self.addProp = '在全局上下文中增加 addProp 属性';
 ## 嵌入式 Web Worker
 嵌入式 Web Worker 本质上就是把代码当作字符串处理；如果是字符串我们可存放的地方就太多了，可以放在 `JavaScript` 的变量中、利用函数的 `toString` 方法能够输出本函数所有代码的字符串的特性、放在 `type` 没有被指定可运行的 `mime-type` 的 `<script>` 标签中等等。
 
-但是，我们会发现一个问题，字符串怎么当作一个地址传入 Worker 的构造器呢？有什么 API 能够生成 URL 呢？`URL.createObjectURL` 方法可以，可是这个 API 能够接收字符串吗？[查阅文档](https://developer.mozilla.org/zh-CN/docs/Web/API/URL/createObjectURL)，我们知道这个方法接收一个 [`Blob` 对象](https://developer.mozilla.org/zh-CN/docs/Web/API/Blob)，这个对象实例在创建时，第一个参数允许接收字符串，第二个参数接收一个配置对象，其中的 `type` 属性能够指定生成的对象实例的类型。现在，我们已经知道了嵌入式 Web Worker 的工作原理，接下来，我们通过 [Demo](https://github.com/Sam618/Blog/HTML5/example/performance-and-integration/web-workers/import-scripts) 来看下代码：
+但是，我们会发现一个问题，字符串怎么当作一个地址传入 Worker 的构造器呢？有什么 API 能够生成 URL 呢？`URL.createObjectURL` 方法可以，可是这个 API 能够接收字符串吗？[查阅文档](https://developer.mozilla.org/zh-CN/docs/Web/API/URL/createObjectURL)，我们知道这个方法接收一个 [`Blob` 对象](https://developer.mozilla.org/zh-CN/docs/Web/API/Blob)，这个对象实例在创建时，第一个参数允许接收字符串，第二个参数接收一个配置对象，其中的 `type` 属性能够指定生成的对象实例的类型。现在，我们已经知道了嵌入式 Web Worker 的工作原理，接下来，我们通过 [Demo](https://github.com/Sam618/Blog/raw/master/HTML5/example/performance-and-integration/web-workers/import-scripts) 来看下代码：
 
 ```HTML
 <!-- index.html -->
@@ -420,11 +420,11 @@ Worker 线程和主线程进行通信，除了使用上面例子中 Worker 实�
 ### Broadcast Channel（广播通道）
 Broadcast Channel 允许我们在同源的所有上下文中发送和接收消息，包括浏览器标签页、iframe 和 Web Worker。需要注意的是这个 API 的兼容性并不好，在 [caniuse](https://caniuse.com/#feat=broadcastchannel) 中我们可以查看浏览器的支持情况。另外，下图能帮助我们更好的理解 Broadcast Channel 的通信过程：
 
-![Broadcast Channel Communication process](https://github.com/Sam618/Blog/HTML5/assets/broadcast-channel.png)
+![Broadcast Channel Communication process](https://github.com/Sam618/Blog/raw/master/HTML5/assets/broadcast-channel.png)
 
 这个 API 的使用方法与 Web Worker 类似，发送和接收也是通过实例的 `postMessage` 方法和 `message` 事件；不同在于构造器是 `BroadcastChannel`，并且它会接收一个频道名称字符串；有着相同频道名称的 `Broadcast Channel` 实例在同一个广播通道中，因此，它们可以相互通信。
 
-[Demo](https://github.com/Sam618/Blog/HTML5/example/performance-and-integration/web-workers/broadcast-channel)
+[Demo](https://github.com/Sam618/Blog/raw/master/HTML5/example/performance-and-integration/web-workers/broadcast-channel)
 
 ```JavaScript
 // main.js
@@ -474,21 +474,21 @@ channel.onmessage = e => {
 - 拷贝消息（Copying the message）：这种方式下消息会被序列化、拷贝然后再发送出去，接收方接收后则进行反序列化取得消息；这与我们使用 `JSON.stringify` 方法把 `JSON` 数据转换成字符串，再通过 `JSON.parse` 方法进行解析是一样的过程，只不过浏览器自动帮我们做了这些工作。经过编码/解码的过程后，我们知道主线程和 Worker 线程并不会共用一个消息实例，它们每次通信都会创建消息副本；这样一来，传递的 **消息越大**，**时间开销就越多**。另外，不同的浏览器实现会有所差别，并且旧版本还有兼容问题，因此比较推荐 **手动** 编码成 **字符串** /解码成序列化数据来传递复杂格式的消息。
 - 转移消息（Transferring the message）：这种方式传递的是 [可转让对象](https://html.spec.whatwg.org/multipage/structured-data.html#transferable-objects)，可转让对象从一个上下文转移到另一个上下文并不会经过任何拷贝操作；因此，一旦对象转让，那么它在原来上下文的那个版本将不复存在，该对象的所有权被转让到新的上下文内；这意味着消息发送者一旦发送消息，就再也无法使用发出的消息数据了。这样的消息传递几乎是瞬时的，在传递大数据时会获得极大的性能提升。
 
-我们通过 [Demo](https://github.com/Sam618/Blog/HTML5/example/performance-and-integration/web-workers/transferable-objects) 来观察下两者的时间差异：
+我们通过 [Demo](https://github.com/Sam618/Blog/raw/master/HTML5/example/performance-and-integration/web-workers/transferable-objects) 来观察下两者的时间差异：
 
-![Transferable performance](https://github.com/Sam618/Blog/HTML5/assets/transferable-performance.png)
+![Transferable performance](https://github.com/Sam618/Blog/raw/master/HTML5/assets/transferable-performance.png)
 
 10 次比较都使用了相同的数据（1024 * 1024 * 32），0 列表示拷贝消息，1 列表示转移消息；可以发现转移消息损失的时间基本可以忽略不计，而拷贝消息消耗的时间非常的大；因此，我们在传递消息时，如果数据比较小，可以直接使用拷贝消息，但是如果数据非常大，那最好使用可转让对象进行消息转移。
 
 ## 跨域
 Worker 在实例化时必须传入同源脚本的地址，否则就会报跨域错误：
 
-![Cross domain error](https://github.com/Sam618/Blog/HTML5/assets/cross-domain.png)
+![Cross domain error](https://github.com/Sam618/Blog/raw/master/HTML5/assets/cross-domain.png)
 
 很多时候，我们都需要把脚本放在 CDN 上面，很容易出现跨域问题，有什么办法能避免跨域呢？
 
 ### 异步
-我们看完上文后知道 **嵌入式 Web Worker** 的本质就是利用了字符串，那我们通过异步的方式先获取到 `JavaScript` 文件的内容，然后再生成同源的 URL，这样 Worker 的构造器自然就能顺利运行了；因此，这种方案主要需要解决的问题是异步跨域；异步跨域最简单的方式莫过于使用 [CORS](https://developer.mozilla.org/zh-CN/docs/Web/HTTP/Access_control_CORS) 了，我们来看下 [Demo](https://github.com/Sam618/Blog/HTML5/example/performance-and-integration/web-workers/cross-domain-cors)（本地的两个 `server*.js` 都要通过 `node` 运行）。
+我们看完上文后知道 **嵌入式 Web Worker** 的本质就是利用了字符串，那我们通过异步的方式先获取到 `JavaScript` 文件的内容，然后再生成同源的 URL，这样 Worker 的构造器自然就能顺利运行了；因此，这种方案主要需要解决的问题是异步跨域；异步跨域最简单的方式莫过于使用 [CORS](https://developer.mozilla.org/zh-CN/docs/Web/HTTP/Access_control_CORS) 了，我们来看下 [Demo](https://github.com/Sam618/Blog/raw/master/HTML5/example/performance-and-integration/web-workers/cross-domain-cors)（本地的两个 `server*.js` 都要通过 `node` 运行）。
 
 ```JavaScript
 // main.js
@@ -532,7 +532,7 @@ onmessage = e => {
 ### `importScripts`
 这种方式实际上也是 **嵌入式 Web Worker**，不过利用了 `importScripts` 引入脚本没有跨域问题这一特性；首先我们生成引入脚本的代码字符串，然后创建同源的 URL，最后运行 Worker 线程；此时，**嵌入式 Web Worker** 执行 `importScripts` 引入了跨域的脚本，最终的执行效果就跟放在同源一样了。
 
-[Demo](https://github.com/Sam618/Blog/HTML5/example/performance-and-integration/web-workers/cross-domain-import-scripts)
+[Demo](https://github.com/Sam618/Blog/raw/master/HTML5/example/performance-and-integration/web-workers/cross-domain-import-scripts)
 
 ```JavaScript
 // main.js
