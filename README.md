@@ -27,4 +27,4 @@
 <h2 align="center">归档</h2>
 
 ### 2019
-1. [【深入吧，HTML 5】 性能 & 集成 —— Web Worker](https://github.com/Sam618/Blog/issues/1)
+1. [【深入吧，HTML 5】 性能 & 集成 —— Web Workers](https://github.com/Sam618/Blog/issues/1)
