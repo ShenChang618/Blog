@@ -577,7 +577,7 @@ onmessage = e => {
 #### 相对路径
 另外，在使用这个方法跨域时，如果通过 `importScripts` 函数使用相对路径的脚本，会有报错，提示我们脚本没有加载成功。
 
-![Cross domain error](https://github.com/Sam618/Blog/raw/master/HTML5/assets/cross-domain-error.png)
+![Cross domain error](https://github.com/Sam618/Blog/raw/master/HTML5/assets/not-load-error.png)
 
 出现这个报错的原因在于通过 `window.URL.createObjectURL` 生成的 `blob` 链接，指向的是内存中的数据，这些数据只为当前页面提供服务，因此，在浏览器的地址栏中访问 `blob` 链接，并不会找到实际的文件；同样的，我们在 `blob` 链接指向的内存数据中访问相对地址，肯定是找不到任何东西的。
 
