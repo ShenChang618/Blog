@@ -11,7 +11,7 @@ onmessage = e => {
   console.log(moment().format());
 
   // 加载异常，后面的代码也无法执行了
-  // importScripts('http://test.com/import-script-text.txt');
+  importScripts('http://test.com/import-script-text.txt');
 
   console.log(self);
   console.log('在 Worker 中测试同步');

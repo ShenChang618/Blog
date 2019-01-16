@@ -9,6 +9,8 @@ const proxyURL = window.URL.createObjectURL(
     },
   ),
 );
+// blob:http://localhost:3000/cb45199f-ca39-4800-8bfd-1c16b97c8910
+console.log(proxyURL);
 console.log('生成同源 URL');
 const worker = new Worker(proxyURL);
 

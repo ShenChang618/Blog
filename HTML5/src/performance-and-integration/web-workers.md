@@ -1,5 +1,10 @@
 # 【深入吧，HTML 5】 性能 & 集成 —— Web Workers
 
+## 版本
+- 2019-01-16
+  - 增加使用 `importScripts` 跨域时，使用相对路径报错的原因说明。
+
+## 前言
 JavaScript 采用的是单线程模型，也就是说，所有任务都要在一个线程上完成，一次只能执行一个任务。有时，我们需要处理大量的计算逻辑，这是比较耗费时间的，用户界面很有可能会出现假死状态，非常影响用户体验。这时，我们就可以使用 Web Workers 来处理这些计算。
 
 Web Workers 是 HTML5 中定义的规范，它允许 JavaScript 脚本运行在主线程之外的后台线程中。这就为 JavaScript 创造了 [多线程](https://zh.wikipedia.org/wiki/%E5%A4%9A%E7%BA%BF%E7%A8%8B) 的环境，在主线程，我们可以创建 Worker 线程，并将一些任务分配给它。Worker 线程与主线程同时运行，两者互不干扰。等到 Worker 线程完成任务，就把结果发送给主线程。
@@ -548,6 +553,8 @@ const proxyURL = window.URL.createObjectURL(
     },
   ),
 );
+// blob:http://localhost:3000/cb45199f-ca39-4800-8bfd-1c16b97c8910
+console.log(proxyURL);
 console.log('生成同源 URL');
 const worker = new Worker(proxyURL);
 
@@ -566,6 +573,15 @@ onmessage = e => {
   postMessage('我在 Worker 中');
 };
 ```
+
+#### 相对路径
+另外，在使用这个方法跨域时，如果通过 `importScripts` 函数使用相对路径的脚本，会有报错，提示我们脚本没有加载成功。
+
+![Cross domain error](https://github.com/Sam618/Blog/raw/master/HTML5/assets/cross-domain-error.png)
+
+出现这个报错的原因在于通过 `window.URL.createObjectURL` 生成的 `blob` 链接，指向的是内存中的数据，这些数据只为当前页面提供服务，因此，在浏览器的地址栏中访问 `blob` 链接，并不会找到实际的文件；同样的，我们在 `blob` 链接指向的内存数据中访问相对地址，肯定是找不到任何东西的。
+
+所以，如果想要在这种场景中访问文件，那我们必须向服务器发送 HTTP 请求来获取数据。
 
 ### 总结
 到此为止，我们已经对 Worker 有了深入的了解，知道了它的作用、使用方式和限制；在真实的场景中，我们也就能够针对最适合的业务使用正确的方式进行使用和规避限制了。
