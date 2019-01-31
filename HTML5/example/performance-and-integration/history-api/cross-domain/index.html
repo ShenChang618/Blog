@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>父窗口</title>
+</head>
+<body>
+  父窗口
+  <iframe name="iframe" src="http://localhost:3001" frameborder="0"></iframe>
+
+  <script>
+    console.log(window.frames['iframe'].location);
+  </script>
+</body>
+</html>

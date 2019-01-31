@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>前端路由实现</title>
+  <style>
+    .link {
+      color: #00f;
+      cursor: pointer;
+    }
+    .link:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+  <ul>
+    <li><a class="link" data-href="/111">111</a></li>
+    <li><a class="link" data-href="/222">222</a></li>
+    <li><a class="link" data-href="/333">333</a></li>
+  </ul>
+
+  <div id="content"></div>
+
+  <script src="./router.js"></script>
+  <script>
+    const router = new Router();
+    const contentDOM = document.querySelector('#content');
+    router.route('/111', state => {
+      contentDOM.innerHTML = '111';
+    });
+    router.route('/222', state => {
+      contentDOM.innerHTML = '222';
+    });
+    router.route('/333', state => {
+      contentDOM.innerHTML = '333';
+    });
+  </script>
+</body>
+</html>
