@@ -1,5 +1,7 @@
 # 【深入吧，HTML 5】 性能 & 集成 —— Web Workers
 
+[博客](https://github.com/Sam618/Blog) 有更多精品文章哟。
+
 ## 修订
 - 2019-01-16
   - 增加使用 `importScripts` 跨域时，使用相对路径报错的原因说明。
